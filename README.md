@@ -86,3 +86,35 @@ Secrets은 GitHub 레포지토리 설정에서 등록 가능하며, 일반 사�
 
 **환경변수(Environment Variable)**
 <br />애플리케이션 실행 환경에서 동적으로 참조되는 값들을 말합니다. 예를 들어, 서버 URL, 포트 번호, 데이터베이스 연결 정보 등을 환경변수로 관리하면, 코드 수정 없이도 배포 환경(개발/테스트/운영)에 맞게 설정할 수 있습니다.
+
+# CDN과 성능 최적화
+
+위의 설명에서 보았듯이 CDN은 콘텐츠를 사용자와 물리적으로 가까운 위치의 서버에서 전달함으로써 응답 시간을 단축하고 트래픽 부하를 분산시키는 역할을 합니다.
+도로를 넓혀 통행량을 늘리는 것과 같은 역할을 하게 하여 성능을 최적화 시킵니다.
+
+## TTFB(Time To First Byte) 최적화 결과
+
+### Before (S3)
+CDN적용 없이 S3 버킷에 직접 접근했을 때의 TTFB 결과입니다.
+![Image](https://github.com/user-attachments/assets/f3838eee-dde4-473c-912b-2147eeac366a)
+
+### After (CloudFront)
+CloudFront를 통해 콘텐츠를 전달받았을 때의 TTFB 결과입니다.
+![Image](https://github.com/user-attachments/assets/e128dcec-9e02-4a45-9489-1c51c284b059)
+
+### 요약
+- S3의 TTFB: 22.41ms
+- CloudFront의 TTFB: 7.36ms
+<br /> CDN을 적용한 것만으로 67% 정도 성능이 개선되었음을 알 수 있습니다.
+
+## 캐싱
+
+![Image](https://github.com/user-attachments/assets/01fc96f3-fb5c-4024-973f-990b5e8b3917)
+
+이미지가 잘 안보일 수 있는데 빨간색 부분이 S3이고, 파란색 부분이 CDN(CloudFront)입니다.
+보면 알 수 있듯이 CDN을 사용하면 Header에 `Content-Encoding: br`과 `X-Cache: Hit from cloudfront`가 추가되어 있습니다.
+
+<br/>`Content-Encoding: br`은 구글에서 개발한 Brotli 압축 알고리즘을 사용했다는 것을 의미하며 일반적으로 gzip보다 더 높은 압축률을 제공해 파일 크기를 작게 만들 수 있습니다.
+<br/>`X-Cache: Hit from cloudfront`는 해당 파일이 이미 CloudFront의 캐싱된 콘텐츠를 가져와 응답했다는 의미입니다.
+
+
