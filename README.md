@@ -40,12 +40,14 @@ CloudFront 배포 도메인 이름 : https://d3ksk4tg75lhhm.cloudfront.net
 이번 과정에서는 빌드하는 과정만 자동화 하였습니다.
 
 **GitHub Actions?**
+<br />
 GitHub에서 제공하는 자동화된 워크플로우/파이프라인 구축 도구입니다.
 - 지정해둔 Repository에 푸시(push)나 풀 리퀘스트(PR)가 생성되는 등의 이벤트가 발생했을 때, 미리 정의해 둔 작업(테스트, 빌드, 배포 등)을 자동으로 실행할 수 있습니다.
 
 ### S3와 스토리지
 
 **S3?**
+<br />
 AWS에서 제공하는 객체 스토리지 서비스입니다. 스토리지를 “버킷(Bucket)” 단위로 관리하며, 웹 애플리케이션에서 정적(Static) 자산(이미지, CSS, JavaScript 파일 등)을 저장하고 전달하는 데 자주 쓰입니다.
 
 -  S3는 용량 제한 없이 빠르고 안정적으로 데이터를 저장하고 제공할 수 있어 정적 웹사이트 호스팅이나 백업, 로그 저장 등 다양한 용도로 사용됩니다.
@@ -55,6 +57,7 @@ AWS에서 제공하는 객체 스토리지 서비스입니다. 스토리지를 �
 ### CloudFront와 CDN
 
 **CDN(Content Delivery Network)?**
+<br />
 콘텐츠(정적 파일, 미디어, 웹 페이지 등)를 지리적으로 분산된 서버(엣지 로케이션)에 캐싱하여, 사용자와 물리적으로 가까운 위치의 서버에서 콘텐츠를 전달함으로써 응답 시간을 단축하고 트래픽 부하를 분산시키는 기술입니다.
 이 CDN을 AWS에서는 CloudFront라는 이름으로 제공합니다.
 
@@ -112,9 +115,9 @@ CloudFront를 통해 콘텐츠를 전달받았을 때의 TTFB 결과입니다.
 ![Image](https://github.com/user-attachments/assets/01fc96f3-fb5c-4024-973f-990b5e8b3917)
 
 이미지가 잘 안보일 수 있는데 빨간색 부분이 S3이고, 파란색 부분이 CDN(CloudFront)입니다.
-보면 알 수 있듯이 CDN을 사용하면 Header에 `Content-Encoding: br`과 `X-Cache: Hit from cloudfront`가 추가되어 있습니다.
+S3는 보면 알 수 있듯이 CDN을 사용하면 Header에 `Content-Encoding: br`과 `X-Cache: Hit from cloudfront`가 추가되어 있습니다.
 
 <br/>`Content-Encoding: br`은 구글에서 개발한 Brotli 압축 알고리즘을 사용했다는 것을 의미하며 일반적으로 gzip보다 더 높은 압축률을 제공해 파일 크기를 작게 만들 수 있습니다.
 <br/>`X-Cache: Hit from cloudfront`는 해당 파일이 이미 CloudFront의 캐싱된 콘텐츠를 가져와 응답했다는 의미입니다.
 
-
+<br/>이를 통해 컨텐츠를 압축, 캐싱하여 서빙하는 것을 알 수 있습니다.
